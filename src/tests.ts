@@ -25,9 +25,11 @@ describe("E2E Tests", function () {
     );
   });
   it("Check unverified icon.", (done) => {
-    icon("-yREnOSjHwqtLQ-ZmorCDj-9LH0jHpeGxV8nh60ziO9").then((verifiedIcon) => {
-      assert(verifiedIcon);
-      done();
-    });
+    icon("-yREnOSjHwqtLQ-ZmorCDj-9LH0jHpeGxV8nh60ziO9").then(
+      (unverifiedIcon) => {
+        assert(unverifiedIcon);
+        done();
+      }
+    );
   });
 });
