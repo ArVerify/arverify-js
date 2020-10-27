@@ -17,14 +17,14 @@
   ],
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@types/chai": "^4.2.14",
-    "@types/mocha": "^8.0.3",
-    "chai": "^4.2.0",
-    "mocha": "^8.2.0",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.0.3",
     "@types/node-fetch": "^2.5.7",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.0",
     "prettier": "^2.1.2",
     "rollup": "^2.32.1",
     "rollup-plugin-typescript2": "^0.28.0",
