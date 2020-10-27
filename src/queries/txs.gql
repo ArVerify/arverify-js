@@ -1,0 +1,20 @@
+query transactions($nodes: [String!], $addr: String!) {
+  transactions(
+    owners: $nodes
+    tags: [
+      { name: "App-Name", values: ["ArVerifyDev"] }
+      { name: "Type", values: ["Verification"] }
+      { name: "Address", values: [$addr] }
+    ]
+  ) {
+    edges {
+      node {
+        id
+        tags {
+          name
+          value
+        }
+      }
+    }
+  }
+}

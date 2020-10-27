@@ -20,6 +20,7 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
+    "@rollup/pluginutils": "^4.1.0",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.3",
     "@types/node-fetch": "^2.5.7",

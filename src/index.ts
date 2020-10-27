@@ -1,30 +1,10 @@
 import { query } from "./utils";
+import txsQuery from "./queries/txs.gql";
 
 export const isVerified = async (addr: string): Promise<boolean> => {
   const verificationTxs = (
     await query({
-      query: `
-				query transactions($nodes: [String!], $addr: String!) {
-					transactions(
-						owners: $nodes
-						tags: [
-							{ name: "App-Name", values: ["ArVerifyDev"] }
-							{ name: "Type", values: ["Verification"] }
-							{ name: "Address", values: [$addr] }
-						]
-					) {
-						edges {
-							node {
-								id
-								tags {
-									name
-									value
-								}
-							}
-						}
-					}
-				}			
-			`,
+      query: txsQuery,
       variables: {
         nodes: ["s-hGrOFm1YysWGC3wXkNaFVpyrjdinVpRKiVnhbo2so"],
         addr,
