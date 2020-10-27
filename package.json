@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c",
+    "test": "rollup -c rollup.test.js && mocha 'build/index.test.js' --no-timeout --exit",
     "fmt": "prettier --write ."
   },
   "main": "dist/index.js",
@@ -16,6 +17,10 @@
   ],
   "types": "dist/index.d.ts",
   "dependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.0.3",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.0",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
