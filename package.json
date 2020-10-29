@@ -1,8 +1,8 @@
 {
   "name": "arverify",
   "version": "1.0.0",
-  "description": "A DAO for verifying addresses on Arweave.",
-  "repository": "git@github.com:johnletey/arverify-js.git",
+  "description": "Anonymous Arweave Verification.",
+  "repository": "git@github.com:ArVerify/arverify-js.git",
   "author": "John Letey <johnletey@gmail.com>",
   "license": "MIT",
   "scripts": {
