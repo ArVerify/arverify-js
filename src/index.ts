@@ -1,6 +1,7 @@
 import { query } from "./utils";
 import txsQuery from "./queries/txs.gql";
 import genesisQuery from "./queries/genesis.gql";
+import tipQuery from "./queries/tip.gql";
 
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
@@ -41,4 +42,28 @@ export const getNodes = async (): Promise<string[]> => {
     }
   });
   return nodes;
+};
+
+export const tipReceived = async (
+  addr: string,
+  node: string,
+  fee: number
+): Promise<boolean> => {
+  if (!(node in (await getNodes()))) return false;
+
+  const txs = (
+    await query({
+      query: tipQuery,
+      variables: {
+        owner: addr,
+        recipient: node,
+      },
+    })
+  ).data.transactions.edges;
+
+  if (txs.length === 1) {
+    return parseFloat(txs[0].node.quantity.ar) === fee;
+  }
+
+  return false;
 };
