@@ -1,0 +1,16 @@
+query {
+  transactions(
+    tags: [
+      { name: "App-Name", values: ["ArVerifyDev"] }
+      { name: "Type", values: ["Genesis"] }
+    ]
+  ) {
+    edges {
+      node {
+        owner {
+          address
+        }
+      }
+    }
+  }
+}

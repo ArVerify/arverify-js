@@ -1,4 +1,4 @@
-import { isVerified, icon } from ".";
+import { isVerified, icon, getNodes } from ".";
 import { assert } from "chai";
 
 describe("E2E Tests", function () {
@@ -31,5 +31,11 @@ describe("E2E Tests", function () {
         done();
       }
     );
+  });
+  it("Check retrieval of nodes.", (done) => {
+    getNodes().then((nodes) => {
+      assert(nodes);
+      done();
+    });
   });
 });

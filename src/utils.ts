@@ -5,7 +5,7 @@ export const query = async ({
   variables,
 }: {
   query: string;
-  variables: Record<string, unknown>;
+  variables?: Record<string, unknown>;
 }): Promise<any> => {
   const graphql = JSON.stringify({
     query,

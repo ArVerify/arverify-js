@@ -1,4 +1,4 @@
-query transactions($nodes: [String!], $addr: String!) {
+query($nodes: [String!], $addr: String!) {
   transactions(
     owners: $nodes
     tags: [

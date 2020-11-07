@@ -1,5 +1,6 @@
 import { query } from "./utils";
 import txsQuery from "./queries/txs.gql";
+import genesisQuery from "./queries/genesis.gql";
 
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
@@ -11,7 +12,7 @@ export const isVerified = async (addr: string): Promise<boolean> => {
     await query({
       query: txsQuery,
       variables: {
-        nodes: ["s-hGrOFm1YysWGC3wXkNaFVpyrjdinVpRKiVnhbo2so"],
+        nodes: await getNodes(),
         addr,
       },
     })
@@ -23,4 +24,21 @@ export const isVerified = async (addr: string): Promise<boolean> => {
 export const icon = async (addr: string): Promise<string> => {
   const verified = await isVerified(addr);
   return verified ? verifiedIcon : unverifiedIcon;
+};
+
+export const getNodes = async (): Promise<string[]> => {
+  const genesisTxs = (
+    await query({
+      query: genesisQuery,
+    })
+  ).data.transactions.edges;
+
+  const nodes: string[] = [];
+  // @ts-ignore
+  genesisTxs.map(({ node }) => {
+    if (!nodes.find((addr) => addr === node.owner.address)) {
+      nodes.push(node.owner.address);
+    }
+  });
+  return nodes;
 };
