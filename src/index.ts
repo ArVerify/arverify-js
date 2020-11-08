@@ -8,6 +8,11 @@ import verifiedIcon from "./icons/verified.svg";
 // https://primer.style/octicons/shield-x-16
 import unverifiedIcon from "./icons/unverified.svg";
 
+// this value is in AR
+export const FEE = 1;
+// 0.9 -> 90%
+export const COMMUNITY_PERCENT = 0.9;
+
 export const isVerified = async (addr: string): Promise<boolean> => {
   const verificationTxs = (
     await query({
@@ -46,8 +51,7 @@ export const getNodes = async (): Promise<string[]> => {
 
 export const tipReceived = async (
   addr: string,
-  node: string,
-  fee: number
+  node: string
 ): Promise<boolean> => {
   if (!(node in (await getNodes()))) return false;
 
@@ -62,7 +66,9 @@ export const tipReceived = async (
   ).data.transactions.edges;
 
   if (txs.length === 1) {
-    return parseFloat(txs[0].node.quantity.ar) === fee;
+    return (
+      parseFloat(txs[0].node.quantity.ar) === FEE * (1 - COMMUNITY_PERCENT)
+    );
   }
 
   return false;
