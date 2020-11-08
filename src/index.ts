@@ -1,5 +1,7 @@
 import { query } from "./utils";
 import txsQuery from "./queries/txs.gql";
+import Arweave from "arweave";
+import { readContract } from "smartweave";
 import genesisQuery from "./queries/genesis.gql";
 import tipQuery from "./queries/tip.gql";
 
@@ -12,6 +14,7 @@ import unverifiedIcon from "./icons/unverified.svg";
 export const FEE = 1;
 // 0.9 -> 90%
 export const COMMUNITY_PERCENT = 0.9;
+export const COMMUNITY = "HWSbM2l-1gsBzCQMjzoP6G4aKafJvDeHyLs5YdTDxm0";
 
 export const isVerified = async (addr: string): Promise<boolean> => {
   const verificationTxs = (
@@ -32,6 +35,22 @@ export const icon = async (addr: string): Promise<string> => {
   return verified ? verifiedIcon : unverifiedIcon;
 };
 
+export const getStake = async (addr: string): Promise<number> => {
+  const client = new Arweave({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+  });
+
+  const state = await readContract(client, COMMUNITY);
+
+  if (addr in state.vault) {
+    // @ts-ignore
+    return state.vault[addr].map((a) => a.balance).reduce((a, b) => a + b, 0);
+  }
+  return 0;
+};
+
 export const getNodes = async (): Promise<string[]> => {
   const genesisTxs = (
     await query({
@@ -40,12 +59,14 @@ export const getNodes = async (): Promise<string[]> => {
   ).data.transactions.edges;
 
   const nodes: string[] = [];
-  // @ts-ignore
-  genesisTxs.map(({ node }) => {
-    if (!nodes.find((addr) => addr === node.owner.address)) {
-      nodes.push(node.owner.address);
+  for (const tx of genesisTxs) {
+    if (!nodes.find((addr) => addr === tx.node.owner.address)) {
+      if ((await getStake(tx.node.owner.address)) > 0) {
+        nodes.push(tx.node.owner.address);
+      }
     }
-  });
+  }
+
   return nodes;
 };
 
