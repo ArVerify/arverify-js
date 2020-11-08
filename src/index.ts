@@ -4,6 +4,7 @@ import Arweave from "arweave";
 import { readContract } from "smartweave";
 import genesisQuery from "./queries/genesis.gql";
 import tipQuery from "./queries/tip.gql";
+import { JWKInterface } from "arweave/node/lib/wallet";
 
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
@@ -93,4 +94,43 @@ export const tipReceived = async (
   }
 
   return false;
+};
+
+export const sendGenesis = async (
+  jwk: JWKInterface,
+  endpoint: string
+): Promise<string> => {
+  const client = new Arweave({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+  });
+
+  const stake = await getStake(await client.wallets.jwkToAddress(jwk));
+
+  if (stake > 0) {
+    const tags = {
+      "App-Name": "ArVerifyDev",
+      Type: "Genesis",
+      Endpoint: endpoint,
+    };
+
+    const tx = await client.createTransaction(
+      {
+        data: Math.random().toString().slice(-4),
+      },
+      jwk
+    );
+
+    for (const [key, value] of Object.entries(tags)) {
+      tx.addTag(key, value);
+    }
+
+    await client.transactions.sign(tx, jwk);
+    await client.transactions.post(tx);
+
+    return tx.id;
+  }
+
+  return "stake";
 };
