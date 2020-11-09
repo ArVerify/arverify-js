@@ -134,3 +134,35 @@ export const sendGenesis = async (
 
   return "stake";
 };
+
+const weightedRandom = (dict: Record<string, number>): string | undefined => {
+  let sum = 0;
+  const r = Math.random();
+
+  for (const addr of Object.keys(dict)) {
+    sum += dict[addr];
+    if (r <= sum && dict[addr] > 0) {
+      return addr;
+    }
+  }
+
+  return;
+};
+
+export const recommendNode = async (): Promise<string> => {
+  const stakes: Record<string, number> = {};
+  let total = 0;
+
+  for (const node of await getNodes()) {
+    const stake = await getStake(node);
+
+    stakes[node] = stake;
+    total += stake;
+  }
+
+  for (const node of Object.keys(stakes)) {
+    stakes[node] = stakes[node] / total;
+  }
+
+  return weightedRandom(stakes) || "";
+};
