@@ -166,3 +166,74 @@ export const recommendNode = async (): Promise<string> => {
 
   return weightedRandom(stakes) || "";
 };
+
+export const sendTip = async (
+  node: string,
+  jwk: JWKInterface
+): Promise<string> => {
+  const client = new Arweave({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+  });
+
+  const tx = await client.createTransaction(
+    {
+      target: node,
+      quantity: client.ar.arToWinston(
+        (FEE * (1 - COMMUNITY_PERCENT)).toString()
+      ),
+    },
+    jwk
+  );
+
+  await client.transactions.sign(tx, jwk);
+  await client.transactions.post(tx);
+
+  return tx.id;
+};
+
+export const verify = async (jwk: JWKInterface): Promise<string> => {
+  const client = new Arweave({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+  });
+
+  const node = await recommendNode();
+  const txID = await sendTip(node, jwk);
+
+  const genesisTx = (
+    await query({
+      query: `
+      query {
+        transactions(
+          owners: ["${node}"]
+          tags: [
+            { name: "App-Name", values: ["ArVerifyDev"] }
+            { name: "Type", values: ["Genesis"] }
+          ]
+          first: 1
+        ) {
+          edges {
+            node {
+              tags {
+                name
+                value
+              }
+            }
+          }
+        }
+      }    
+    `,
+    })
+  ).data.transactions.edges[0];
+
+  const endpoint = genesisTx.node.tags.find(
+    (tag: { name: string; value: string }) => tag.name === "Endpoint"
+  ).value;
+  const res = await fetch(
+    `${endpoint}/verify?address=${await client.wallets.jwkToAddress(jwk)}`
+  );
+  return (await res.clone().json()).uri;
+};
