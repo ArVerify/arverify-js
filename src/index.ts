@@ -177,6 +177,11 @@ export const sendTip = async (
     protocol: "https",
   });
 
+  const tags = {
+    "App-Name": "ArVerifyDev",
+    Type: "FEE_NODE",
+  };
+
   const tx = await client.createTransaction(
     {
       target: node,
@@ -186,6 +191,80 @@ export const sendTip = async (
     },
     jwk
   );
+
+  for (const [key, value] of Object.entries(tags)) {
+    tx.addTag(key, value);
+  }
+
+  await client.transactions.sign(tx, jwk);
+  await client.transactions.post(tx);
+
+  return tx.id;
+};
+
+const selectTokenHolder = async (): Promise<string> => {
+  const client = new Arweave({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+  });
+
+  const state = await readContract(client, COMMUNITY);
+  const balances = state.balances;
+  const vault = state.vault;
+
+  let total = 0;
+  for (const addr of Object.keys(balances)) {
+    total += balances[addr];
+  }
+
+  for (const addr of Object.keys(vault)) {
+    if (!vault[addr].length) continue;
+
+    const vaultBalance = vault[addr]
+      .map((a: { balance: number; start: number; end: number }) => a.balance)
+      .reduce((a: number, b: number) => a + b, 0);
+
+    total += vaultBalance;
+
+    if (addr in balances) {
+      balances[addr] += vaultBalance;
+    } else {
+      balances[addr] = vaultBalance;
+    }
+  }
+
+  const weighted: { [addr: string]: number } = {};
+  for (const addr of Object.keys(balances)) {
+    weighted[addr] = balances[addr] / total;
+  }
+
+  return weightedRandom(weighted)!;
+};
+
+export const sendCommunityTip = async (jwk: JWKInterface): Promise<string> => {
+  const client = new Arweave({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+  });
+
+  const tags = {
+    "App-Name": "ArVerifyDev",
+    Type: "FEE_COMMUNITY",
+  };
+
+  const tx = await client.createTransaction(
+    {
+      target: await selectTokenHolder(),
+      quantity: client.ar.arToWinston((FEE * COMMUNITY_PERCENT).toString()),
+    },
+    jwk
+  );
+
+  for (const [key, value] of Object.entries(tags)) {
+    tx.addTag(key, value);
+  }
 
   await client.transactions.sign(tx, jwk);
   await client.transactions.post(tx);
@@ -201,7 +280,9 @@ export const verify = async (jwk: JWKInterface): Promise<string> => {
   });
 
   const node = await recommendNode();
-  const txID = await sendTip(node, jwk);
+  await sendTip(node, jwk);
+
+  await sendCommunityTip(jwk);
 
   const genesisTx = (
     await query({
