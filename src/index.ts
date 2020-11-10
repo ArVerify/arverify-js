@@ -314,7 +314,9 @@ export const verify = async (jwk: JWKInterface): Promise<string> => {
     (tag: { name: string; value: string }) => tag.name === "Endpoint"
   ).value;
   const res = await fetch(
-    `${endpoint}/verify?address=${await client.wallets.jwkToAddress(jwk)}`
+    `${endpoint}${
+      endpoint.endsWith("/") ? "" : "/"
+    }verify?address=${await client.wallets.jwkToAddress(jwk)}`
   );
   return (await res.clone().json()).uri;
 };
