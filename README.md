@@ -6,6 +6,8 @@
 
 ## Usage
 
+![](https://github.com/ArVerify/arverify-js/raw/main/img/verify.svg)
+
 ![](https://github.com/ArVerify/arverify-js/raw/main/img/isVerified.svg)
 
 ![](https://github.com/ArVerify/arverify-js/raw/main/img/icon.svg)
