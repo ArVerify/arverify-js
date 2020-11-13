@@ -5,6 +5,7 @@ import { readContract } from "smartweave";
 import genesisQuery from "./queries/genesis.gql";
 import tipQuery from "./queries/tip.gql";
 import { JWKInterface } from "arweave/node/lib/wallet";
+import fetch from "node-fetch";
 
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
@@ -280,9 +281,6 @@ export const verify = async (jwk: JWKInterface): Promise<string> => {
   });
 
   const node = await recommendNode();
-  await sendTip(node, jwk);
-
-  await sendCommunityTip(jwk);
 
   const genesisTx = (
     await query({
@@ -313,6 +311,16 @@ export const verify = async (jwk: JWKInterface): Promise<string> => {
   const endpoint = genesisTx.node.tags.find(
     (tag: { name: string; value: string }) => tag.name === "Endpoint"
   ).value;
+
+  try {
+    await fetch(`${endpoint}${endpoint.endsWith("/") ? "" : "/"}ping`);
+  } catch {
+    return "offline";
+  }
+
+  await sendTip(node, jwk);
+  await sendCommunityTip(jwk);
+
   const res = await fetch(
     `${endpoint}${
       endpoint.endsWith("/") ? "" : "/"
