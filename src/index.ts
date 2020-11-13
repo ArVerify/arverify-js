@@ -76,7 +76,8 @@ export const tipReceived = async (
   addr: string,
   node: string
 ): Promise<boolean> => {
-  if (!(node in (await getNodes()))) return false;
+  const nodes = await getNodes();
+  if (!nodes.includes(node)) return false;
 
   const txs = (
     await query({
@@ -88,9 +89,18 @@ export const tipReceived = async (
     })
   ).data.transactions.edges;
 
+  const client = new Arweave({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+  });
+
   if (txs.length === 1) {
     return (
-      parseFloat(txs[0].node.quantity.ar) === FEE * (1 - COMMUNITY_PERCENT)
+      parseFloat(txs[0].node.quantity.winston) ===
+      parseFloat(
+        client.ar.arToWinston((FEE * (1 - COMMUNITY_PERCENT)).toString())
+      )
     );
   }
 

@@ -4,14 +4,14 @@ query($owner: String!, $recipient: String!) {
     recipients: [$recipient]
     tags: [
       { name: "App-Name", values: ["ArVerifyDev"] }
-      { name: "Type", values: ["Tip"] }
+      { name: "Type", values: ["FEE_NODE"] }
     ]
     first: 1
   ) {
     edges {
       node {
         quantity {
-          ar
+          winston
         }
       }
     }
