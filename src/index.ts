@@ -72,6 +72,22 @@ export const getNodes = async (): Promise<string[]> => {
   return nodes;
 };
 
+const getFee = async (): Promise<number> => {
+  const client = new Arweave({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+  });
+
+  const contract = await readContract(client, COMMUNITY);
+
+  const fee = contract.settings.find(
+    (setting: (string | number)[]) => setting[0] === "fee"
+  );
+
+  return fee ? fee[1] : FEE;
+};
+
 export const tipReceived = async (
   addr: string,
   node: string
@@ -99,7 +115,9 @@ export const tipReceived = async (
     return (
       parseFloat(txs[0].node.quantity.winston) ===
       parseFloat(
-        client.ar.arToWinston((FEE * (1 - COMMUNITY_PERCENT)).toString())
+        client.ar.arToWinston(
+          ((await getFee()) * (1 - COMMUNITY_PERCENT)).toString()
+        )
       )
     );
   }
@@ -197,7 +215,7 @@ export const sendTip = async (
     {
       target: node,
       quantity: client.ar.arToWinston(
-        (FEE * (1 - COMMUNITY_PERCENT)).toString()
+        ((await getFee()) * (1 - COMMUNITY_PERCENT)).toString()
       ),
     },
     jwk
@@ -268,7 +286,9 @@ export const sendCommunityTip = async (jwk: JWKInterface): Promise<string> => {
   const tx = await client.createTransaction(
     {
       target: await selectTokenHolder(),
-      quantity: client.ar.arToWinston((FEE * COMMUNITY_PERCENT).toString()),
+      quantity: client.ar.arToWinston(
+        ((await getFee()) * COMMUNITY_PERCENT).toString()
+      ),
     },
     jwk
   );
