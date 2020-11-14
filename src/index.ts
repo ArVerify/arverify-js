@@ -72,7 +72,7 @@ export const getNodes = async (): Promise<string[]> => {
   return nodes;
 };
 
-const getFee = async (): Promise<number> => {
+export const getFee = async (): Promise<number> => {
   const client = new Arweave({
     host: "arweave.net",
     port: 443,
