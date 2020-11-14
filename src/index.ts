@@ -18,7 +18,9 @@ export const FEE = 1;
 export const COMMUNITY_PERCENT = 0.9;
 export const COMMUNITY = "HWSbM2l-1gsBzCQMjzoP6G4aKafJvDeHyLs5YdTDxm0";
 
-export const isVerified = async (addr: string): Promise<boolean> => {
+export const isVerified = async (
+  addr: string
+): Promise<{ verified: boolean; icon: string }> => {
   const verificationTxs = (
     await query({
       query: txsQuery,
@@ -29,12 +31,12 @@ export const isVerified = async (addr: string): Promise<boolean> => {
     })
   ).data.transactions.edges;
 
-  return verificationTxs.length > 0;
-};
+  const verified = verificationTxs.length > 0;
 
-export const icon = async (addr: string): Promise<string> => {
-  const verified = await isVerified(addr);
-  return verified ? verifiedIcon : unverifiedIcon;
+  return {
+    verified,
+    icon: verified ? verifiedIcon : unverifiedIcon,
+  };
 };
 
 export const getStake = async (addr: string): Promise<number> => {
