@@ -14,8 +14,8 @@ import unverifiedIcon from "./icons/unverified.svg";
 
 // this value is in AR
 export const FEE = 1;
-// 0.9 -> 90%
-export const COMMUNITY_PERCENT = 0.9;
+// 0.4 -> 40%
+export const COMMUNITY_PERCENT = 0.4;
 export const COMMUNITY = "HWSbM2l-1gsBzCQMjzoP6G4aKafJvDeHyLs5YdTDxm0";
 
 export const isVerified = async (
