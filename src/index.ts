@@ -306,7 +306,10 @@ export const sendCommunityTip = async (jwk: JWKInterface): Promise<string> => {
   return tx.id;
 };
 
-export const verify = async (jwk: JWKInterface): Promise<string> => {
+export const verify = async (
+  jwk: JWKInterface,
+  returnUri?: string
+): Promise<string> => {
   const client = new Arweave({
     host: "arweave.net",
     port: 443,
@@ -357,7 +360,9 @@ export const verify = async (jwk: JWKInterface): Promise<string> => {
   const res = await fetch(
     `${endpoint}${
       endpoint.endsWith("/") ? "" : "/"
-    }verify?address=${await client.wallets.jwkToAddress(jwk)}`
+    }verify?address=${await client.wallets.jwkToAddress(jwk)}${
+      returnUri && `&return=${returnUri}`
+    }`
   );
   return (await res.clone().json()).uri;
 };
