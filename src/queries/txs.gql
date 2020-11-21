@@ -2,7 +2,7 @@ query($nodes: [String!], $addr: String!) {
   transactions(
     owners: $nodes
     tags: [
-      { name: "App-Name", values: ["ArVerifyDev"] }
+      { name: "App-Name", values: ["ArVerify"] }
       { name: "Type", values: ["Verification"] }
       { name: "Address", values: [$addr] }
     ]
