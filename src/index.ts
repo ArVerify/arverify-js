@@ -141,6 +141,54 @@ export const sendGenesis = async (
   const stake = await getStake(await client.wallets.jwkToAddress(jwk));
 
   if (stake > 0) {
+    const possibleGenesis = (
+      await query({
+        query: `
+        query {
+          transactions(
+            owners: ["${await client.wallets.jwkToAddress(jwk)}"]
+            tags: [
+              { name: "App-Name", values: ["ArVerify"] }
+              { name: "Type", values: ["Genesis"] }
+            ]
+            first: 1
+          ) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }      
+      `,
+      })
+    ).data.transactions.edges;
+
+    if (possibleGenesis.length === 1) {
+      const tx = (
+        await query({
+          query: `
+          query {
+            transaction(id: "${possibleGenesis[0].node.id}") {
+              tags {
+                name
+                value
+              }
+            }
+          }
+        `,
+        })
+      ).data.transaction;
+
+      if (
+        tx.tags.find(
+          (tag: { name: string; value: string }) => tag.name === "Endpoint"
+        ).value === endpoint
+      ) {
+        return possibleGenesis[0].node.id;
+      }
+    }
+
     const tags = {
       "App-Name": "ArVerify",
       Type: "Genesis",
