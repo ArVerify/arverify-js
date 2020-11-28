@@ -78,7 +78,8 @@ export const getFee = async (): Promise<number> => {
   const contract = await readContract(client, COMMUNITY);
 
   const fee = contract.settings.find(
-    (setting: (string | number)[]) => setting[0] === "fee"
+    (setting: (string | number)[]) =>
+      setting[0].toString().toLowerCase() === "fee"
   );
 
   return fee ? fee[1] : FEE;
