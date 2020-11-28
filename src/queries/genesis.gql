@@ -1,11 +1,16 @@
-query {
+query($cursor: String) {
   transactions(
     tags: [
       { name: "App-Name", values: ["ArVerify"] }
       { name: "Type", values: ["Genesis"] }
     ]
+    after: $cursor
   ) {
+    pageInfo {
+      hasNextPage
+    }
     edges {
+      cursor
       node {
         owner {
           address

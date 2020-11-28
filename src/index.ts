@@ -1,4 +1,4 @@
-import { run, fetchTxTag } from "ar-gql";
+import { run, all, fetchTxTag } from "ar-gql";
 import txsQuery from "./queries/txs.gql";
 import Arweave from "arweave";
 import { readContract } from "smartweave";
@@ -54,7 +54,7 @@ export const getStake = async (addr: string): Promise<number> => {
 };
 
 export const getNodes = async (): Promise<string[]> => {
-  const genesisTxs = (await run(genesisQuery)).data.transactions.edges;
+  const genesisTxs = await all(genesisQuery);
 
   const nodes: string[] = [];
   for (const tx of genesisTxs) {
