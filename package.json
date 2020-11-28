@@ -17,6 +17,7 @@
   ],
   "types": "dist/index.d.ts",
   "dependencies": {
+    "ar-gql": "^0.0.1",
     "arweave": "^1.9.1",
     "node-fetch": "^2.6.1",
     "smartweave": "^0.4.10"

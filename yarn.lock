@@ -43,9 +43,9 @@
     form-data "^3.0.0"
 
 "@types/node@*":
-  version "14.14.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.5.tgz#e92d3b8f76583efa26c1a63a21c9d3c1143daa29"
-  integrity sha512-H5Wn24s/ZOukBmDn03nnGTp18A60ny9AmCwnEcgJiTgSGsCO7k+NWP7zjCCbhlcnVCoI+co52dUAt9GMhOSULw==
+  version "14.14.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.10.tgz#5958a82e41863cfc71f2307b3748e3491ba03785"
+  integrity sha512-J32dgx2hw8vXrSbu4ZlVhn1Nm3GbeCFNw2FWL8S5QKucHGY0cyNwjdQdO+KMBZ4wpmC7KhLCiNsdk1RFRIYUQQ==
 
 "@ungap/promise-all-settled@1.1.2":
   version "1.1.2"
@@ -98,6 +98,13 @@ anymatch@~3.1.1:
   dependencies:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
+
+ar-gql@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/ar-gql/-/ar-gql-0.0.1.tgz#66b4b1fcba928dee634a0b9c76a9534a41eb4a55"
+  integrity sha512-ky7kOIfs5lYr3cN3movieHbzm45xeUb1q42kZN4nvb3FB712UQ939q3I48WCpcrBeZXygSDfLvNvUxOZZjylrA==
+  dependencies:
+    node-fetch "^2.6.1"
 
 argparse@^1.0.7:
   version "1.0.10"

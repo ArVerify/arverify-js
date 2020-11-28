@@ -1,4 +1,4 @@
-import { query } from "./utils";
+import { run, fetchTxTag } from "ar-gql";
 import txsQuery from "./queries/txs.gql";
 import Arweave from "arweave";
 import { readContract } from "smartweave";
@@ -22,12 +22,9 @@ export const isVerified = async (
   addr: string
 ): Promise<{ verified: boolean; txID: string; icon: string }> => {
   const verificationTxs = (
-    await query({
-      query: txsQuery,
-      variables: {
-        nodes: await getNodes(),
-        addr,
-      },
+    await run(txsQuery, {
+      nodes: await getNodes(),
+      addr,
     })
   ).data.transactions.edges;
 
@@ -57,11 +54,7 @@ export const getStake = async (addr: string): Promise<number> => {
 };
 
 export const getNodes = async (): Promise<string[]> => {
-  const genesisTxs = (
-    await query({
-      query: genesisQuery,
-    })
-  ).data.transactions.edges;
+  const genesisTxs = (await run(genesisQuery)).data.transactions.edges;
 
   const nodes: string[] = [];
   for (const tx of genesisTxs) {
@@ -99,12 +92,9 @@ export const tipReceived = async (
   if (!nodes.includes(node)) return false;
 
   const txs = (
-    await query({
-      query: tipQuery,
-      variables: {
-        owner: addr,
-        recipient: node,
-      },
+    await run(tipQuery, {
+      owner: addr,
+      recipient: node,
     })
   ).data.transactions.edges;
 
@@ -142,8 +132,7 @@ export const sendGenesis = async (
 
   if (stake > 0) {
     const possibleGenesis = (
-      await query({
-        query: `
+      await run(`
         query {
           transactions(
             owners: ["${await client.wallets.jwkToAddress(jwk)}"]
@@ -160,31 +149,16 @@ export const sendGenesis = async (
             }
           }
         }      
-      `,
-      })
+      `)
     ).data.transactions.edges;
 
     if (possibleGenesis.length === 1) {
-      const tx = (
-        await query({
-          query: `
-          query {
-            transaction(id: "${possibleGenesis[0].node.id}") {
-              tags {
-                name
-                value
-              }
-            }
-          }
-        `,
-        })
-      ).data.transaction;
+      const previousEndpoint = await fetchTxTag(
+        possibleGenesis[0].node.id,
+        "Endpoint"
+      );
 
-      if (
-        tx.tags.find(
-          (tag: { name: string; value: string }) => tag.name === "Endpoint"
-        ).value === endpoint
-      ) {
+      if (previousEndpoint === endpoint) {
         return possibleGenesis[0].node.id;
       }
     }
@@ -367,8 +341,7 @@ export const verify = async (
   const node = await recommendNode();
 
   const genesisTx = (
-    await query({
-      query: `
+    await run(`
       query {
         transactions(
           owners: ["${node}"]
@@ -380,21 +353,15 @@ export const verify = async (
         ) {
           edges {
             node {
-              tags {
-                name
-                value
-              }
+              id
             }
           }
         }
       }    
-    `,
-    })
+    `)
   ).data.transactions.edges[0];
 
-  const endpoint = genesisTx.node.tags.find(
-    (tag: { name: string; value: string }) => tag.name === "Endpoint"
-  ).value;
+  const endpoint = (await fetchTxTag(genesisTx.node.id, "Endpoint"))!;
 
   try {
     await fetch(`${endpoint}${endpoint.endsWith("/") ? "" : "/"}ping`);
