@@ -20,7 +20,7 @@ export const COMMUNITY = "HWSbM2l-1gsBzCQMjzoP6G4aKafJvDeHyLs5YdTDxm0";
 
 export const isVerified = async (
   addr: string
-): Promise<{ verified: boolean; txID: string; icon: string }> => {
+): Promise<{ verified: boolean; txID?: string; icon: string }> => {
   const verificationTxs = (
     await run(txsQuery, {
       nodes: await getNodes(),
@@ -32,7 +32,7 @@ export const isVerified = async (
 
   return {
     verified,
-    txID: verificationTxs[0].node.id,
+    txID: verified ? verificationTxs[0].node.id : undefined,
     icon: verified ? verifiedIcon : unverifiedIcon,
   };
 };
