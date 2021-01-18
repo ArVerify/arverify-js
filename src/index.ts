@@ -12,8 +12,8 @@ import verifiedIcon from "./icons/verified.svg";
 // https://primer.style/octicons/shield-x-16
 import unverifiedIcon from "./icons/unverified.svg";
 
-// this value is in AR
-export const FEE = 5;
+// this value is in USD
+export const FEE = 10;
 // 0.4 -> 40%
 export const COMMUNITY_PERCENT = 0.4;
 export const COMMUNITY = "f6lW-sKxsc340p8eBBL2i_fnmSI_fRSFmkqvzqyUsRs";
@@ -69,6 +69,11 @@ export const getNodes = async (): Promise<string[]> => {
 };
 
 export const getFee = async (): Promise<number> => {
+  const res = await fetch(
+    "https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd"
+  );
+  const price = 1 / (await res.clone().json()).arweave.usd;
+
   const client = new Arweave({
     host: "arweave.net",
     port: 443,
@@ -82,7 +87,7 @@ export const getFee = async (): Promise<number> => {
       setting[0].toString().toLowerCase() === "fee"
   );
 
-  return fee ? fee[1] : FEE;
+  return price * (fee ? fee[1] : FEE);
 };
 
 export const tipReceived = async (
