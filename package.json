@@ -1,6 +1,6 @@
 {
   "name": "arverify",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Anonymous Arweave Verification.",
   "repository": "git@github.com:ArVerify/arverify-js.git",
   "author": "John Letey <johnletey@gmail.com>",

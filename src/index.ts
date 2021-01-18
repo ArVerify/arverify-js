@@ -111,14 +111,14 @@ export const tipReceived = async (
   });
 
   if (txs.length === 1) {
-    return (
-      parseFloat(txs[0].node.quantity.winston) ===
-      parseFloat(
-        client.ar.arToWinston(
-          ((await getFee()) * (1 - COMMUNITY_PERCENT)).toString()
-        )
+    const amnt = parseFloat(txs[0].node.quantity.winston);
+    const fee = parseFloat(
+      client.ar.arToWinston(
+        ((await getFee()) * (1 - COMMUNITY_PERCENT)).toString()
       )
     );
+
+    return amnt >= 0.95 * fee && amnt <= 1.05 * fee;
   }
 
   return false;
