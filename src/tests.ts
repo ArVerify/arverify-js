@@ -28,7 +28,14 @@ describe("E2E Tests", function () {
 describe("Testing trust score", () => {
   it("Should get the score for an address", (done) => {
     getScore("-yREnOSjHwqtLQ-ZmorCDj-9LH0jHpeGxV8nh60ziO8").then((res) => {
-      console.log(res)
+      assert(res);
+      done()
+    });
+  })
+  it("Should have a higher score for a different address", (done) => {
+    getScore("s-hGrOFm1YysWGC3wXkNaFVpyrjdinVpRKiVnhbo2so").then((res) => {
+      assert(res);
+      assert(res.percentage > 0.8);
       done()
     });
   })
