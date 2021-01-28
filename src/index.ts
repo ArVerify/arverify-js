@@ -7,6 +7,8 @@ import tipQuery from "./queries/tip.gql";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import fetch from "node-fetch";
 
+const { URLSearchParams } = require("url");
+
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
 // https://primer.style/octicons/shield-x-16
@@ -359,7 +361,8 @@ export const sendCommunityTip = async (jwk: JWKInterface): Promise<string> => {
 
 export const verify = async (
   jwk: JWKInterface,
-  returnUri?: string
+  returnUri?: string,
+  referral?: string
 ): Promise<string> => {
   const client = new Arweave({
     host: "arweave.net",
@@ -401,12 +404,14 @@ export const verify = async (
   await sendTip(node, jwk);
   await sendCommunityTip(jwk);
 
+  const queryParams = new URLSearchParams({
+    address: await client.wallets.jwkToAddress(jwk),
+    return: returnUri,
+    referral,
+  });
+
   const res = await fetch(
-    `${endpoint}${
-      endpoint.endsWith("/") ? "" : "/"
-    }verify?address=${await client.wallets.jwkToAddress(jwk)}${
-      returnUri && `&return=${returnUri}`
-    }`
+    `${endpoint}${endpoint.endsWith("/") ? "" : "/"}verify?` + queryParams
   );
   return (await res.clone().json()).uri;
 };
