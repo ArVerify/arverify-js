@@ -1,11 +1,11 @@
 import fetch from "node-fetch";
 
 interface ScoreResponse {
-  address: string
-  percentage: number
-  score: number
-  status: string
-  updated_at: string
+  address: string;
+  percentage: number;
+  score: number;
+  status: string;
+  updated_at: string;
 }
 
 export const getScore = async (address: string): Promise<ScoreResponse> => {
