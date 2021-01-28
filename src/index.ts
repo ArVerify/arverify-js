@@ -1,16 +1,17 @@
-import { run, all, fetchTxTag } from "ar-gql";
+import {run, all, fetchTxTag} from "ar-gql";
 import txsQuery from "./queries/txs.gql";
 import Arweave from "arweave";
-import { readContract } from "smartweave";
+import {readContract} from "smartweave";
 import genesisQuery from "./queries/genesis.gql";
 import tipQuery from "./queries/tip.gql";
-import { JWKInterface } from "arweave/node/lib/wallet";
+import {JWKInterface} from "arweave/node/lib/wallet";
 import fetch from "node-fetch";
 
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
 // https://primer.style/octicons/shield-x-16
 import unverifiedIcon from "./icons/unverified.svg";
+import {getScore} from "./trust";
 
 // this value is in USD
 export const FEE = 10;
@@ -18,9 +19,17 @@ export const FEE = 10;
 export const COMMUNITY_PERCENT = 0.4;
 export const COMMUNITY = "f6lW-sKxsc340p8eBBL2i_fnmSI_fRSFmkqvzqyUsRs";
 
+export enum Threshold {
+  LOW = 0.3,
+  MEDIUM = 0.6,
+  HIGH = 0.8,
+  ULTRA = 1,
+}
+
 export const isVerified = async (
-  addr: string
-): Promise<{ verified: boolean; txID?: string; icon: string }> => {
+  addr: string,
+  threshold: number = Threshold.MEDIUM,
+): Promise<{ verified: boolean; txID?: string; icon: string, percentage: number }> => {
   const verificationTxs = (
     await run(txsQuery, {
       nodes: await getNodes(),
@@ -28,12 +37,21 @@ export const isVerified = async (
     })
   ).data.transactions.edges;
 
-  const verified = verificationTxs.length > 0;
+  let percentage;
+
+  if (verificationTxs.length > 0) {
+    percentage = 1
+  } else {
+    percentage = (await getScore(addr)).percentage
+  }
+
+  const verified = percentage >= threshold;
 
   return {
     verified,
-    txID: verified ? verificationTxs[0].node.id : undefined,
+    txID: verificationTxs.length > 0 ? verificationTxs[0].node.id : undefined,
     icon: verified ? verifiedIcon : unverifiedIcon,
+    percentage
   };
 };
 

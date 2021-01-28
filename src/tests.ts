@@ -1,11 +1,18 @@
-import {isVerified, getNodes} from ".";
+import {isVerified, getNodes, Threshold} from ".";
 import {getScore} from "./trust";
 import {assert} from "chai";
 
 describe("E2E Tests", function () {
   it("Check verified address.", (done) => {
-    isVerified("-yREnOSjHwqtLQ-ZmorCDj-9LH0jHpeGxV8nh60ziO8").then((res) => {
+    isVerified("s-hGrOFm1YysWGC3wXkNaFVpyrjdinVpRKiVnhbo2so").then((res) => {
       assert(res.verified);
+      assert(res.icon);
+      done();
+    });
+  });
+  it("Should fail a threshold check.", (done) => {
+    isVerified("s-hGrOFm1YysWGC3wXkNaFVpyrjdinVpRKiVnhbo2so", Threshold.ULTRA).then((res) => {
+      assert(!res.verified);
       assert(res.icon);
       done();
     });
