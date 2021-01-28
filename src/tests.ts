@@ -1,5 +1,6 @@
-import { isVerified, getNodes } from ".";
-import { assert } from "chai";
+import {isVerified, getNodes} from ".";
+import {getScore} from "./trust";
+import {assert} from "chai";
 
 describe("E2E Tests", function () {
   it("Check verified address.", (done) => {
@@ -23,3 +24,12 @@ describe("E2E Tests", function () {
     });
   });
 });
+
+describe("Testing trust score", () => {
+  it("Should get the score for an address", (done) => {
+    getScore("-yREnOSjHwqtLQ-ZmorCDj-9LH0jHpeGxV8nh60ziO8").then((res) => {
+      console.log(res)
+      done()
+    });
+  })
+})
