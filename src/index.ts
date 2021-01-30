@@ -28,7 +28,7 @@ export enum Threshold {
   ULTRA = 1,
 }
 
-export const isVerified = async (
+export const getVerification = async (
   addr: string,
   threshold: number = Threshold.MEDIUM
 ): Promise<{

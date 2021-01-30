@@ -1,17 +1,19 @@
-import { isVerified, getNodes, Threshold } from ".";
+import { getVerification, getNodes, Threshold } from ".";
 import { getScore } from "./trust";
 import { assert } from "chai";
 
 describe("E2E Tests", function () {
   it("Check verified address.", (done) => {
-    isVerified("s-hGrOFm1YysWGC3wXkNaFVpyrjdinVpRKiVnhbo2so").then((res) => {
-      assert(res.verified);
-      assert(res.icon);
-      done();
-    });
+    getVerification("s-hGrOFm1YysWGC3wXkNaFVpyrjdinVpRKiVnhbo2so").then(
+      (res) => {
+        assert(res.verified);
+        assert(res.icon);
+        done();
+      }
+    );
   });
   it("Should fail a threshold check.", (done) => {
-    isVerified(
+    getVerification(
       "s-hGrOFm1YysWGC3wXkNaFVpyrjdinVpRKiVnhbo2so",
       Threshold.ULTRA
     ).then((res) => {
@@ -21,11 +23,13 @@ describe("E2E Tests", function () {
     });
   });
   it("Check unverified address.", (done) => {
-    isVerified("-yREnOSjHwqtLQ-ZmorCDj-9LH0jHpeGxV8nh60ziO9").then((res) => {
-      assert(!res.verified);
-      assert(res.icon);
-      done();
-    });
+    getVerification("-yREnOSjHwqtLQ-ZmorCDj-9LH0jHpeGxV8nh60ziO9").then(
+      (res) => {
+        assert(!res.verified);
+        assert(res.icon);
+        done();
+      }
+    );
   });
   it("Check retrieval of nodes.", (done) => {
     getNodes().then((nodes) => {
