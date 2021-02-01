@@ -1,6 +1,5 @@
-import { getVerification, getNodes, Threshold } from ".";
-import { getScore } from "./trust";
-import { assert } from "chai";
+import {getVerification, getNodes, Threshold, getScore} from ".";
+import {assert} from "chai";
 
 describe("E2E Tests", function () {
   it("Check verified address.", (done) => {
