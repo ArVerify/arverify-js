@@ -16,7 +16,7 @@ import unverifiedIcon from "./icons/unverified.svg";
 import { getScore } from "./trust";
 
 // export functions from trust
-export * from "./trust"
+export * from "./trust";
 
 // this value is in USD
 export const FEE = 10;
