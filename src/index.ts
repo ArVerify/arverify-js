@@ -171,7 +171,7 @@ export const sendGenesis = async (
           transactions(
             owners: ["${await client.wallets.jwkToAddress(jwk)}"]
             tags: [
-              { name: "App-Name", values: ["ArVerify"] }
+              { name: "Application", values: ["ArVerify"] }
               { name: "Type", values: ["Genesis"] }
             ]
             first: 1
@@ -198,7 +198,7 @@ export const sendGenesis = async (
     }
 
     const tags = {
-      "App-Name": "ArVerify",
+      "Application": "ArVerify",
       Type: "Genesis",
       Endpoint: endpoint,
     };
@@ -266,7 +266,7 @@ export const sendTip = async (
   });
 
   const tags = {
-    "App-Name": "ArVerify",
+    "Application": "ArVerify",
     Type: "FEE_NODE",
   };
 
@@ -338,7 +338,7 @@ export const sendCommunityTip = async (jwk: JWKInterface): Promise<string> => {
   });
 
   const tags = {
-    "App-Name": "ArVerify",
+    "Application": "ArVerify",
     Type: "FEE_COMMUNITY",
   };
 
@@ -381,7 +381,7 @@ export const verify = async (
         transactions(
           owners: ["${node}"]
           tags: [
-            { name: "App-Name", values: ["ArVerify"] }
+            { name: "Application", values: ["ArVerify"] }
             { name: "Type", values: ["Genesis"] }
           ]
           first: 1

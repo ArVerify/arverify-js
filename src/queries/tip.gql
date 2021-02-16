@@ -3,7 +3,7 @@ query($owner: String!, $recipient: String!) {
     owners: [$owner]
     recipients: [$recipient]
     tags: [
-      { name: "App-Name", values: ["ArVerify"] }
+      { name: "Application", values: ["ArVerify"] }
       { name: "Type", values: ["FEE_NODE"] }
     ]
     first: 1

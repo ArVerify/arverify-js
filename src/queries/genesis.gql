@@ -1,7 +1,7 @@
 query($cursor: String) {
   transactions(
     tags: [
-      { name: "App-Name", values: ["ArVerify"] }
+      { name: "Application", values: ["ArVerify"] }
       { name: "Type", values: ["Genesis"] }
     ]
     after: $cursor
