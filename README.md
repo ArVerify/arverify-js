@@ -41,6 +41,8 @@ if (verification.verified) {
 
 ### Verifying addresses
 
+**Note**: Only execute the `verify()` function when you have the users consents.
+
 ```js
 import { verify } from "arverify";
 
