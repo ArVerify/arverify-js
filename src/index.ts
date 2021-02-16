@@ -1,19 +1,19 @@
-import {run, all, fetchTxTag} from "ar-gql";
+import { run, all, fetchTxTag } from "ar-gql";
 import txsQuery from "./queries/txs.gql";
 import Arweave from "arweave";
-import {readContract} from "smartweave";
+import { readContract } from "smartweave";
 import genesisQuery from "./queries/genesis.gql";
 import tipQuery from "./queries/tip.gql";
-import {JWKInterface} from "arweave/node/lib/wallet";
+import { JWKInterface } from "arweave/node/lib/wallet";
 import fetch from "node-fetch";
 
-const {URLSearchParams} = require("url");
+const { URLSearchParams } = require("url");
 
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
 // https://primer.style/octicons/shield-x-16
 import unverifiedIcon from "./icons/unverified.svg";
-import {getScore} from "./trust";
+import { getScore } from "./trust";
 
 // export functions from trust
 export * from "./trust";
@@ -198,7 +198,7 @@ export const sendGenesis = async (
     }
 
     const tags = {
-      "Application": "ArVerify",
+      Application: "ArVerify",
       Type: "Genesis",
       Endpoint: endpoint,
     };
@@ -266,7 +266,7 @@ export const sendTip = async (
   });
 
   const tags = {
-    "Application": "ArVerify",
+    Application: "ArVerify",
     Type: "FEE_NODE",
   };
 
@@ -338,7 +338,7 @@ export const sendCommunityTip = async (jwk: JWKInterface): Promise<string> => {
   });
 
   const tags = {
-    "Application": "ArVerify",
+    Application: "ArVerify",
     Type: "FEE_COMMUNITY",
   };
 
@@ -404,8 +404,8 @@ export const verify = async (
     return "offline";
   }
 
-  const address = await client.wallets.jwkToAddress(jwk)
-  const tipped = await tipReceived(address, node)
+  const address = await client.wallets.jwkToAddress(jwk);
+  const tipped = await tipReceived(address, node);
 
   if (!tipped) {
     await sendTip(node, jwk);
