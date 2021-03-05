@@ -1,4 +1,4 @@
-import { run, all, fetchTxTag } from "ar-gql";
+import { all, fetchTxTag, run } from "ar-gql";
 import txsQuery from "./queries/txs.gql";
 import Arweave from "arweave";
 import { readContract } from "smartweave";
@@ -7,8 +7,7 @@ import tipQuery from "./queries/tip.gql";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import fetch from "node-fetch";
 
-const { URLSearchParams } = require("url");
-
+import { URLSearchParams } from "url";
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
 // https://primer.style/octicons/shield-x-16
