@@ -47,15 +47,9 @@ export const getVerification = async (
     })
   ).data.transactions.edges;
 
-  let percentage;
+  const percentage = (await getScore(addr)).percentage;
 
-  if (verificationTxs.length > 0) {
-    percentage = 1;
-  } else {
-    percentage = (await getScore(addr)).percentage;
-  }
-
-  const verified = percentage >= threshold;
+  const verified = percentage >= threshold * 100;
 
   return {
     verified,
@@ -92,6 +86,8 @@ export const getNodes = async (): Promise<string[]> => {
       }
     }
   }
+
+  if (!nodes.length) throw Error("No nodes online")
 
   return nodes;
 };
@@ -290,7 +286,7 @@ export const sendTip = async (
   return tx.id;
 };
 
-const selectTokenHolder = async (): Promise<string> => {
+export const selectTokenHolder = async (): Promise<string> => {
   const client = new Arweave({
     host: "arweave.net",
     port: 443,
