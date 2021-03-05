@@ -1,17 +1,17 @@
-import {all, fetchTxTag, run} from "ar-gql";
+import { all, fetchTxTag, run } from "ar-gql";
 import txsQuery from "./queries/txs.gql";
 import Arweave from "arweave";
-import {readContract} from "smartweave";
+import { readContract } from "smartweave";
 import genesisQuery from "./queries/genesis.gql";
 import tipQuery from "./queries/tip.gql";
-import {JWKInterface} from "arweave/node/lib/wallet";
+import { JWKInterface } from "arweave/node/lib/wallet";
 import fetch from "node-fetch";
 
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
 // https://primer.style/octicons/shield-x-16
 import unverifiedIcon from "./icons/unverified.svg";
-import {getScore} from "./trust";
+import { getScore } from "./trust";
 
 // export functions from trust
 export * from "./trust";
@@ -406,7 +406,7 @@ export const verify = async (
     await sendCommunityTip(jwk);
   }
 
-  const queryParams = `address=${address}&return=${returnUri}&referral=${referral}`
+  const queryParams = `address=${address}&return=${returnUri}&referral=${referral}`;
 
   const res = await fetch(
     `${endpoint}${endpoint.endsWith("/") ? "" : "/"}verify?` + queryParams
