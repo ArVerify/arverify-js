@@ -1,4 +1,13 @@
-import {getVerification, getNodes, Threshold, getScore, getStake, getFee, recommendNode, selectTokenHolder} from ".";
+import {
+  getVerification,
+  getNodes,
+  Threshold,
+  getScore,
+  getStake,
+  getFee,
+  recommendNode,
+  selectTokenHolder,
+} from ".";
 import { assert } from "chai";
 
 describe("Testing core functions", () => {
@@ -9,37 +18,40 @@ describe("Testing core functions", () => {
     });
   });
   it("Should find active nodes", (done) => {
-    getNodes().then((nodes) => {
-      assert(nodes);
-      assert(nodes.length)
-    }).catch((err) => {
-      // thorws an error when no nodes are online
-      assert(err)
-    }).finally(() => {
-      done()
-    });
+    getNodes()
+      .then((nodes) => {
+        assert(nodes);
+        assert(nodes.length);
+      })
+      .catch((err) => {
+        // thorws an error when no nodes are online
+        assert(err);
+      })
+      .finally(() => {
+        done();
+      });
   });
   it("Should get the node fee", (done) => {
     getFee().then((fee) => {
       assert(fee);
       done();
-    })
+    });
   });
   it("Should recommend a node", (done) => {
     recommendNode().then((node) => {
       assert(node);
       getNodes().then((nodes) => {
         // check if recommended node in all nodes
-        assert(nodes.indexOf(node) > -1)
+        assert(nodes.indexOf(node) > -1);
         done();
-      })
-    })
+      });
+    });
   });
   it("Should select a token holder", (done) => {
     selectTokenHolder().then((address) => {
       assert(address);
       done();
-    })
+    });
   });
 });
 

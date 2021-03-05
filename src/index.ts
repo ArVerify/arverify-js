@@ -87,7 +87,7 @@ export const getNodes = async (): Promise<string[]> => {
     }
   }
 
-  if (!nodes.length) throw Error("No nodes online")
+  if (!nodes.length) throw Error("No nodes online");
 
   return nodes;
 };
