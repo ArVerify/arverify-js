@@ -406,7 +406,7 @@ export const verify = async (
     await sendCommunityTip(jwk);
   }
 
-  const queryParams = `address=${address}&return=${returnUri}&referral=${referral}`;
+  const queryParams = `address=${address}&return=${returnUri || ""}&referral=${referral || ""}`;
 
   const res = await fetch(
     `${endpoint}${endpoint.endsWith("/") ? "" : "/"}verify?` + queryParams
