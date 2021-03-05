@@ -4,6 +4,7 @@ query($nodes: [String!], $addr: String!) {
     tags: [
       { name: "Application", values: ["ArVerify"] }
       { name: "Action", values: ["Verification"] }
+      { name: "Method", values: ["Google"] }
       { name: "Address", values: [$addr] }
     ]
   ) {
