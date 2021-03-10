@@ -34,24 +34,15 @@ export const getVerification = async (
   threshold: number = Threshold.MEDIUM
 ): Promise<{
   verified: boolean;
-  txID?: string;
   icon: string;
   percentage: number;
 }> => {
-  const verificationTxs = (
-    await run(txsQuery, {
-      nodes: await getNodes(),
-      addr,
-    })
-  ).data.transactions.edges;
-
   const percentage = (await getScore(addr)).percentage;
 
   const verified = percentage >= threshold * 100;
 
   return {
     verified,
-    txID: verificationTxs.length > 0 ? verificationTxs[0].node.id : undefined,
     icon: verified ? verifiedIcon : unverifiedIcon,
     percentage,
   };
