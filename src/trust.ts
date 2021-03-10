@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import axios from "axios";
 
 interface ScoreResponse {
   address: string;
@@ -9,7 +9,7 @@ interface ScoreResponse {
 }
 
 export const getScore = async (address: string): Promise<ScoreResponse> => {
-  const raw = await fetch(`https://api.arverify.org/score/${address}`);
+  const { data } = await axios.get(`https://api.arverify.org/score/${address}`);
 
-  return raw.clone().json();
+  return data;
 };
