@@ -5,7 +5,7 @@ import { readContract } from "smartweave";
 import genesisQuery from "./queries/genesis.gql";
 import tipQuery from "./queries/tip.gql";
 import { JWKInterface } from "arweave/node/lib/wallet";
-import fetch from "node-fetch";
+import axios from "axios";
 
 // https://primer.style/octicons/shield-check-16
 import verifiedIcon from "./icons/verified.svg";
@@ -34,24 +34,15 @@ export const getVerification = async (
   threshold: number = Threshold.MEDIUM
 ): Promise<{
   verified: boolean;
-  txID?: string;
   icon: string;
   percentage: number;
 }> => {
-  const verificationTxs = (
-    await run(txsQuery, {
-      nodes: await getNodes(),
-      addr,
-    })
-  ).data.transactions.edges;
-
   const percentage = (await getScore(addr)).percentage;
 
   const verified = percentage >= threshold * 100;
 
   return {
     verified,
-    txID: verificationTxs.length > 0 ? verificationTxs[0].node.id : undefined,
     icon: verified ? verifiedIcon : unverifiedIcon,
     percentage,
   };
@@ -91,10 +82,10 @@ export const getNodes = async (): Promise<string[]> => {
 };
 
 export const getFee = async (): Promise<number> => {
-  const res = await fetch(
+  const { data } = await axios.get(
     "https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd"
   );
-  const price = 1 / (await res.clone().json()).arweave.usd;
+  const price = 1 / data.arweave.usd;
 
   const client = new Arweave({
     host: "arweave.net",
@@ -393,7 +384,7 @@ export const verify = async (
   const endpoint = (await fetchTxTag(genesisTx.node.id, "Endpoint"))!;
 
   try {
-    await fetch(`${endpoint}${endpoint.endsWith("/") ? "" : "/"}ping`);
+    await axios.get(`${endpoint}${endpoint.endsWith("/") ? "" : "/"}ping`);
   } catch {
     return "offline";
   }
@@ -410,8 +401,8 @@ export const verify = async (
     referral || ""
   }`;
 
-  const res = await fetch(
+  const { data } = await axios.get(
     `${endpoint}${endpoint.endsWith("/") ? "" : "/"}verify?` + queryParams
   );
-  return (await res.clone().json()).uri;
+  return data.uri;
 };

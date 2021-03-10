@@ -17,16 +17,15 @@
   ],
   "types": "dist/index.d.ts",
   "dependencies": {
-    "ar-gql": "^0.0.1",
+    "ar-gql": "^0.0.6",
     "arweave": "^1.9.1",
-    "node-fetch": "^2.6.1",
+    "axios": "^0.21.1",
     "smartweave": "^0.4.10"
   },
   "devDependencies": {
     "@rollup/pluginutils": "^4.1.0",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.3",
-    "@types/node-fetch": "^2.5.8",
     "chai": "^4.2.0",
     "mocha": "^8.2.0",
     "prettier": "^2.1.2",
