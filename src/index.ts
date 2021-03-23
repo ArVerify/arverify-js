@@ -138,7 +138,7 @@ export const tipReceived = async (
 };
 
 export const sendGenesis = async (
-  jwk: JWKInterface,
+  jwk: JWKInterface | "use_wallet",
   endpoint: string
 ): Promise<string> => {
   const client = new Arweave({
@@ -242,7 +242,7 @@ export const recommendNode = async (): Promise<string> => {
 
 export const sendTip = async (
   node: string,
-  jwk: JWKInterface
+  jwk: JWKInterface | "use_wallet"
 ): Promise<string> => {
   const client = new Arweave({
     host: "arweave.net",
@@ -315,7 +315,9 @@ export const selectTokenHolder = async (): Promise<string> => {
   return weightedRandom(weighted)!;
 };
 
-export const sendCommunityTip = async (jwk: JWKInterface): Promise<string> => {
+export const sendCommunityTip = async (
+  jwk: JWKInterface | "use_wallet"
+): Promise<string> => {
   const client = new Arweave({
     host: "arweave.net",
     port: 443,
@@ -348,7 +350,7 @@ export const sendCommunityTip = async (jwk: JWKInterface): Promise<string> => {
 };
 
 export const verify = async (
-  jwk: JWKInterface,
+  jwk: JWKInterface | "use_wallet",
   returnUri?: string,
   referral?: string
 ): Promise<string> => {
